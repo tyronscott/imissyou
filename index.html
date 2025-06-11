@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -56,14 +57,18 @@
         }
 
         @keyframes float {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0px) translateX(0px);
                 opacity: 0.7;
             }
+
             33% {
                 transform: translateY(-30px) translateX(20px);
                 opacity: 0.4;
             }
+
             66% {
                 transform: translateY(20px) translateX(-15px);
                 opacity: 0.8;
@@ -77,7 +82,7 @@
             padding: 60px 50px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1),
-                        0 8px 32px rgba(0, 0, 0, 0.1);
+                0 8px 32px rgba(0, 0, 0, 0.1);
             text-align: center;
             position: relative;
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -86,7 +91,7 @@
         .container:hover {
             transform: translateY(-2px);
             box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15),
-                        0 10px 40px rgba(0, 0, 0, 0.1);
+                0 10px 40px rgba(0, 0, 0, 0.1);
         }
 
         .question {
@@ -104,6 +109,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -157,7 +163,7 @@
             background: rgba(255, 255, 255, 0.2);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            position: absolute;
+            position: relative;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
@@ -207,6 +213,7 @@
                 opacity: 0;
                 transform: scale(0.8) translateY(20px);
             }
+
             100% {
                 opacity: 1;
                 transform: scale(1) translateY(0);
@@ -215,22 +222,29 @@
 
         .heart-animation {
             font-size: 3rem;
+            margin-top: -100px;
             animation: heartBeat 1.5s ease-in-out infinite 0.8s;
         }
 
         @keyframes heartBeat {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: scale(1);
             }
+
             14% {
                 transform: scale(1.1);
             }
+
             28% {
                 transform: scale(1);
             }
+
             42% {
                 transform: scale(1.1);
             }
+
             70% {
                 transform: scale(1);
             }
@@ -276,41 +290,72 @@
                 opacity: 1;
                 transform: translate(0, 0) scale(1);
             }
+
             100% {
                 opacity: 0;
                 transform: translate(var(--dx), var(--dy)) scale(0);
             }
         }
 
-        .particle:nth-child(1) { --dx: 60px; --dy: -40px; animation-delay: 0.1s; }
-        .particle:nth-child(2) { --dx: -50px; --dy: -60px; animation-delay: 0.15s; }
-        .particle:nth-child(3) { --dx: 80px; --dy: 30px; animation-delay: 0.2s; }
-        .particle:nth-child(4) { --dx: -70px; --dy: 40px; animation-delay: 0.25s; }
-        .particle:nth-child(5) { --dx: 0px; --dy: -80px; animation-delay: 0.3s; }
-        .particle:nth-child(6) { --dx: 45px; --dy: 0px; animation-delay: 0.1s; }
+        .particle:nth-child(1) {
+            --dx: 60px;
+            --dy: -40px;
+            animation-delay: 0.1s;
+        }
+
+        .particle:nth-child(2) {
+            --dx: -50px;
+            --dy: -60px;
+            animation-delay: 0.15s;
+        }
+
+        .particle:nth-child(3) {
+            --dx: 80px;
+            --dy: 30px;
+            animation-delay: 0.2s;
+        }
+
+        .particle:nth-child(4) {
+            --dx: -70px;
+            --dy: 40px;
+            animation-delay: 0.25s;
+        }
+
+        .particle:nth-child(5) {
+            --dx: 0px;
+            --dy: -80px;
+            animation-delay: 0.3s;
+        }
+
+        .particle:nth-child(6) {
+            --dx: 45px;
+            --dy: 0px;
+            animation-delay: 0.1s;
+        }
 
         @media (max-width: 768px) {
             .container {
                 margin: 20px;
                 padding: 40px 30px;
             }
-            
+
             .question {
                 font-size: 2rem;
             }
-            
+
             .buttons {
                 flex-direction: column;
                 gap: 15px;
                 height: auto;
             }
-            
+
             .btn {
                 width: 200px;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="orb"></div>
     <div class="orb"></div>
@@ -326,8 +371,8 @@
         </div>
 
         <div class="success-screen" id="successScreen">
-            <div class="success-message">ako rin t____t</div>
             <div class="heart-animation">💙</div>
+            <div class="success-message">ako rin t____t</div>
         </div>
     </div>
 
@@ -340,62 +385,75 @@
 
         let evasionCount = 0;
 
-        // Enhanced evasion for No button - actually move the element
-        noBtn.addEventListener('mouseenter', () => {
+        let evade = (e) => {
             evasionCount++;
-            
-            // Calculate random position within safe bounds
+
             const containerRect = container.getBoundingClientRect();
             const buttonRect = noBtn.getBoundingClientRect();
-            
-            // Calculate safe movement bounds
+
             const maxMoveX = Math.min(150, (window.innerWidth - containerRect.width) / 2);
             const maxMoveY = Math.min(100, (window.innerHeight - containerRect.height) / 2);
-            
-            const randomX = (Math.random() - 0.5) * maxMoveX * 2;
-            const randomY = (Math.random() - 0.5) * maxMoveY * 2;
-            
-            // Add moving class and disable pointer events during animation
+
+            let randomX = (Math.random() - 0.5) * maxMoveX * 2;
+            let randomY = (Math.random() - 0.5) * maxMoveY * 2;
+
+            // also evade the mouse cursor
+            const mouseX = e.clientX - containerRect.left - buttonRect.width / 2;
+            const mouseY = e.clientY - containerRect.top - buttonRect.height / 2;
+            const distanceX = mouseX - (buttonRect.left - containerRect.left);
+            const distanceY = mouseY - (buttonRect.top - containerRect.top);
+
+            // Adjust random position to avoid cursor
+            if (Math.abs(distanceX) < 100 && Math.abs(distanceY) < 100) {
+                randomX += distanceX > 0 ? -100 : 100;
+                randomY += distanceY > 0 ? -100 : 100;
+            }
+
             noBtn.classList.add('moving');
-            
+
             // Actually move the button's position
             noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
-            
+            noBtn.style.position = 'absolute';
+
             // Re-enable pointer events after animation
             setTimeout(() => {
                 noBtn.classList.remove('moving');
             }, 400);
-            
+
             // Increase evasion speed after multiple attempts
             if (evasionCount > 3) {
                 noBtn.style.transition = 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
             }
-        });
+        };
+
+        noBtn.addEventListener('mouseenter', evade);
+        noBtn.addEventListener('touchstart', evade);
+        // noBtn.addEventListener('ont')
 
         // Ripple effect for Yes button
         yesBtn.addEventListener('click', (e) => {
             const rect = yesBtn.getBoundingClientRect();
             const ripple = document.createElement('span');
             const size = 60;
-            
+
             ripple.classList.add('ripple');
             ripple.style.width = ripple.style.height = size + 'px';
             ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
             ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
-            
+
             yesBtn.appendChild(ripple);
-            
+
             // Create particle burst
             const particles = document.createElement('div');
             particles.className = 'particles';
             container.appendChild(particles);
-            
+
             for (let i = 0; i < 6; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 particles.appendChild(particle);
             }
-            
+
             // Transition to success screen
             setTimeout(() => {
                 mainScreen.classList.add('hidden');
@@ -403,7 +461,7 @@
                     successScreen.classList.add('active');
                 }, 300);
             }, 400);
-            
+
             // Cleanup
             setTimeout(() => {
                 ripple.remove();
@@ -418,4 +476,5 @@
         });
     </script>
 </body>
+
 </html>
