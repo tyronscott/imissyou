@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>miss mo ba ak?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Subtle floating orbs in background */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 7s;
+        }
+
+        .orb:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 14s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) translateX(0px);
+                opacity: 0.7;
+            }
+            33% {
+                transform: translateY(-30px) translateX(20px);
+                opacity: 0.4;
+            }
+            66% {
+                transform: translateY(20px) translateX(-15px);
+                opacity: 0.8;
+            }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(40px);
+            border-radius: 24px;
+            padding: 60px 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1),
+                        0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15),
+                        0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 40px;
+            letter-spacing: -0.02em;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.2s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            height: 60px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.5s forwards;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-yes {
+            background: rgba(0, 122, 255, 0.9);
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 122, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-yes:hover {
+            background: rgba(0, 122, 255, 1);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(0, 122, 255, 0.4);
+        }
+
+        .btn-yes:active {
+            transform: translateY(0) scale(0.98);
+            transition: all 0.1s ease;
+        }
+
+        .btn-no {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: absolute;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .btn-no:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-no.moving {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+        }
+
+        .main-screen {
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .main-screen.hidden {
+            opacity: 0;
+            transform: scale(0.95) translateY(-20px);
+            pointer-events: none;
+        }
+
+        .success-screen {
+            display: none;
+            opacity: 0;
+            transform: scale(1.1);
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .success-screen.active {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .success-message {
+            font-size: 2.8rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+            animation: successPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+        }
+
+        @keyframes successPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .heart-animation {
+            font-size: 3rem;
+            animation: heartBeat 1.5s ease-in-out infinite 0.8s;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            14% {
+                transform: scale(1.1);
+            }
+            28% {
+                transform: scale(1);
+            }
+            42% {
+                transform: scale(1.1);
+            }
+            70% {
+                transform: scale(1);
+            }
+        }
+
+        /* Ripple effect for yes button */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: rippleEffect 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Particle system for celebration */
+        .particles {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleBurst 1.2s ease-out forwards;
+        }
+
+        @keyframes particleBurst {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--dx), var(--dy)) scale(0);
+            }
+        }
+
+        .particle:nth-child(1) { --dx: 60px; --dy: -40px; animation-delay: 0.1s; }
+        .particle:nth-child(2) { --dx: -50px; --dy: -60px; animation-delay: 0.15s; }
+        .particle:nth-child(3) { --dx: 80px; --dy: 30px; animation-delay: 0.2s; }
+        .particle:nth-child(4) { --dx: -70px; --dy: 40px; animation-delay: 0.25s; }
+        .particle:nth-child(5) { --dx: 0px; --dy: -80px; animation-delay: 0.3s; }
+        .particle:nth-child(6) { --dx: 45px; --dy: 0px; animation-delay: 0.1s; }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 40px 30px;
+            }
+            
+            .question {
+                font-size: 2rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                gap: 15px;
+                height: auto;
+            }
+            
+            .btn {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+
+    <div class="container">
+        <div class="main-screen" id="mainScreen">
+            <h1 class="question">miss mo b ak? :(</h1>
+            <div class="buttons">
+                <button class="btn btn-yes" id="yesBtn">Yes</button>
+                <button class="btn btn-no" id="noBtn">No</button>
+            </div>
+        </div>
+
+        <div class="success-screen" id="successScreen">
+            <div class="success-message">ako rin t____t</div>
+            <div class="heart-animation">💙</div>
+        </div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const mainScreen = document.getElementById('mainScreen');
+        const successScreen = document.getElementById('successScreen');
+        const container = document.querySelector('.container');
+
+        let evasionCount = 0;
+
+        // Enhanced evasion for No button - actually move the element
+        noBtn.addEventListener('mouseenter', () => {
+            evasionCount++;
+            
+            // Calculate random position within safe bounds
+            const containerRect = container.getBoundingClientRect();
+            const buttonRect = noBtn.getBoundingClientRect();
+            
+            // Calculate safe movement bounds
+            const maxMoveX = Math.min(150, (window.innerWidth - containerRect.width) / 2);
+            const maxMoveY = Math.min(100, (window.innerHeight - containerRect.height) / 2);
+            
+            const randomX = (Math.random() - 0.5) * maxMoveX * 2;
+            const randomY = (Math.random() - 0.5) * maxMoveY * 2;
+            
+            // Add moving class and disable pointer events during animation
+            noBtn.classList.add('moving');
+            
+            // Actually move the button's position
+            noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            
+            // Re-enable pointer events after animation
+            setTimeout(() => {
+                noBtn.classList.remove('moving');
+            }, 400);
+            
+            // Increase evasion speed after multiple attempts
+            if (evasionCount > 3) {
+                noBtn.style.transition = 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            }
+        });
+
+        // Ripple effect for Yes button
+        yesBtn.addEventListener('click', (e) => {
+            const rect = yesBtn.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            const size = 60;
+            
+            ripple.classList.add('ripple');
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+            ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+            
+            yesBtn.appendChild(ripple);
+            
+            // Create particle burst
+            const particles = document.createElement('div');
+            particles.className = 'particles';
+            container.appendChild(particles);
+            
+            for (let i = 0; i < 6; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particles.appendChild(particle);
+            }
+            
+            // Transition to success screen
+            setTimeout(() => {
+                mainScreen.classList.add('hidden');
+                setTimeout(() => {
+                    successScreen.classList.add('active');
+                }, 300);
+            }, 400);
+            
+            // Cleanup
+            setTimeout(() => {
+                ripple.remove();
+                particles.remove();
+            }, 600);
+        });
+
+        // Prevent No button clicks
+        noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            return false;
+        });
+    </script>
+</body>
+</html>
